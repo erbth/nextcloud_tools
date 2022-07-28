@@ -43,11 +43,12 @@ def main():
                 cur.execute('select * from `%s`;' % table)
                 def datasets():
                     while True:
-                        ds = cur.fetchone()
-                        if ds is None:
+                        buf = cur.fetchmany()
+                        if not buf:
                             break
 
-                        yield ds
+                        for ds in buf:
+                            yield ds
 
                 sample_data = {c: None for c in columns}
                 for i, v in enumerate(datasets()):
